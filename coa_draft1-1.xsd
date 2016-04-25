@@ -69,22 +69,25 @@
                 <xsd:element name="Coronet" type="Coronet"> </xsd:element>
 
                 <xsd:element name="Helm" type="Helm"> </xsd:element>
-                <xsd:element name="Crest_1" type="Crest"> </xsd:element>
 
-                <xsd:element name="Crest_2" type="Crest"> </xsd:element>
+                <xsd:element name="Crest" type="Crest" maxOccurs="unbounded"> </xsd:element>
 
                 <xsd:element name="Supports" type="Supports"> </xsd:element>
 
-                <xsd:element name="Background" type="Background"/>
+                <xsd:element name="Ownership" type="Ownership"/>
                 <xsd:element name="Motto">
                     <xsd:complexType>
                         <xsd:choice maxOccurs="unbounded">
                             <xsd:element name="Text">
                                 <xsd:complexType>
-                                    <xsd:attribute name="lang"/>
+                                    <xsd:simpleContent>
+                                        <xsd:extension base="xsd:string">
+                                            <xsd:attribute name="lang"/>
+                                        </xsd:extension>
+                                    </xsd:simpleContent>
                                 </xsd:complexType>
                             </xsd:element>
-                            <xsd:element name="Translation"/>
+                            <xsd:element name="Translation" type="xsd:string"/>
                         </xsd:choice>
                     </xsd:complexType>
                 </xsd:element>
@@ -94,7 +97,7 @@
     </xsd:element>
     <xsd:complexType name="Helm">
         <xsd:sequence minOccurs="0">
-            <xsd:element name="Rank"/>
+            <xsd:element name="Rank" type="xsd:string"/>
             <xsd:element name="VisorType">
                 <xsd:simpleType>
                     <xsd:restriction base="xsd:string">
@@ -116,9 +119,9 @@
     </xsd:complexType>
     <xsd:complexType name="Coronet">
         <xsd:all minOccurs="0">
-            <xsd:element minOccurs="0" name="Rank"/>
-            <xsd:element minOccurs="0" name="StraberryLeaves"/>
-            <xsd:element minOccurs="0" name="Pearls"/>
+            <xsd:element minOccurs="0" name="Rank" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="StraberryLeaves" type="xsd:int"/>
+            <xsd:element minOccurs="0" name="Pearls" type="xsd:int"/>
         </xsd:all>
     </xsd:complexType>
     <xsd:complexType name="DivisionInfo">
@@ -129,15 +132,31 @@
     </xsd:complexType>
     <xsd:complexType name="Crest">
         <xsd:all>
-            <xsd:element minOccurs="0" name="Device"/>
-            <xsd:element minOccurs="0" name="Wreath_or_torse"/>
-            <xsd:element minOccurs="0" name="Cap_of_maintenance"/>
-            <xsd:element minOccurs="0" name="type"/>
+            <xsd:element minOccurs="0" name="Device" type="xsd:string"/>
+            <xsd:element name="TopOfHelm">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                        <xsd:enumeration value="wreath"/>
+                        <xsd:enumeration value="cap_of_maintenance"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+            <xsd:element minOccurs="0" name="type" type="xsd:string"/>
         </xsd:all>
     </xsd:complexType>
     <xsd:complexType name="Supports">
         <xsd:all minOccurs="0">
-            <xsd:element name="Figure"/>
+            <xsd:element name="Figure">
+                <xsd:complexType>
+                    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+                        <xsd:element name="Type" type="xsd:string"/>
+                        <xsd:element maxOccurs="unbounded" minOccurs="0" name="BodyPart"
+                            type="xsd:string"/>
+                        <xsd:element maxOccurs="unbounded" minOccurs="0" name="Color"
+                            type="xsd:string"/>
+                    </xsd:choice>
+                </xsd:complexType>
+            </xsd:element>
             <xsd:element name="Side">
                 <xsd:simpleType>
                     <xsd:restriction base="xsd:string">
@@ -149,17 +168,59 @@
         </xsd:all>
     </xsd:complexType>
     <xsd:complexType name="Ordinary">
-        <xsd:all minOccurs="0">
-            <xsd:element minOccurs="0" name="Shape"/>
-            <xsd:element minOccurs="0" name="Color"/>
-            <xsd:element minOccurs="0" name="Direction"/>
-            <xsd:element minOccurs="0" name="Pattern"/>
-        </xsd:all>
-    </xsd:complexType>
-    <xsd:complexType name="Background">
         <xsd:sequence>
-            <xsd:element name="FamilyName"/>
-            <xsd:element name="Country"/>
+            <xsd:element name="Color" type="xsd:string"/>
+            <xsd:element name="Type" type="xsd:string"/>
+            <xsd:element maxOccurs="unbounded" minOccurs="1" name="Charge">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element maxOccurs="unbounded" minOccurs="1" name="Type"
+                            type="xsd:string"/>
+                        <xsd:element maxOccurs="unbounded" minOccurs="0" name="Amount"
+                            type="xsd:string"/>
+                        <xsd:element maxOccurs="unbounded" minOccurs="1" name="Color"
+                            type="xsd:string"/>
+                        <xsd:element maxOccurs="unbounded" minOccurs="0" name="Position"
+                            type="xsd:string"/>
+                        <xsd:element maxOccurs="unbounded" minOccurs="0" name="IsPierced">
+                            <xsd:simpleType>
+                                <xsd:restriction base="xsd:string">
+                                    <xsd:enumeration value="Yes"/>
+                                    <xsd:enumeration value="No"/>
+                                </xsd:restriction>
+                            </xsd:simpleType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="Field">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="Color" type="xsd:string"/>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="Charge" type="Charge"/>
+        </xsd:choice>
+    </xsd:complexType>
+    <xsd:complexType name="Charge">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="1" name="Type" type="xsd:string"/>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="Amount" type="xsd:string"/>
+            <xsd:element maxOccurs="unbounded" name="Color" type="xsd:string"/>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="Position" type="xsd:string"/>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="IsPierced">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                        <xsd:enumeration value="Yes"/>
+                        <xsd:enumeration value="No"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="Ownership">
+        <xsd:sequence>
+            <xsd:element name="FamilyName" type="xsd:string"/>
+            <xsd:element name="Country" type="xsd:string"/>
         </xsd:sequence>
     </xsd:complexType>
 </xsd:schema>
